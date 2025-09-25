@@ -33,14 +33,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.LLStatus;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-import java.util.List;
 
 /*
  * This file contains an example of a Linear "OpMode".
@@ -70,7 +62,7 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Omni Linear OpMode", group="Linear OpMode")
+@TeleOp(name="Basic: Omni Linear OpMode Intake", group="Linear OpMode")
 
 public class BasicOmniOpMode_Linear extends LinearOpMode {
 
@@ -80,17 +72,25 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
     private DcMotor backLeftDrive = null;
     private DcMotor frontRightDrive = null;
     private DcMotor backRightDrive = null;
+    private DcMotor intakeMotor = null;
+
+    private DcMotor outtakeLeft = null;
+    private DcMotor outtakeRight = null;
+
+
 
     @Override
     public void runOpMode() {
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        frontLeftDrive = hardwareMap.get(DcMotor.class, "front_left_drive");
-        backLeftDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
-        frontRightDrive = hardwareMap.get(DcMotor.class, "front_right_drive");
-        backRightDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
-        //intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
+        frontLeftDrive = hardwareMap.get(DcMotor.class, "fL");
+        backLeftDrive = hardwareMap.get(DcMotor.class, "bL");
+        frontRightDrive = hardwareMap.get(DcMotor.class, "fR");
+        backRightDrive = hardwareMap.get(DcMotor.class, "bR");
+        intakeMotor = hardwareMap.get(DcMotor.class, "i");
+        outtakeLeft = hardwareMap.get(DcMotor.class, "oL");
+        outtakeRight = hardwareMap.get(DcMotor.class, "oR");
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -106,6 +106,9 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
         backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        intakeMotor.setDirection(DcMotor.Direction.REVERSE);
+        outtakeLeft.setDirection(DcMotor.Direction.FORWARD);
+        outtakeRight.setDirection(DcMotor.Direction.REVERSE);
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -122,7 +125,6 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
             double lateral =  gamepad1.left_stick_x;
             double yaw     =  gamepad1.right_stick_x;
-            double intakePower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -130,6 +132,11 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             double frontRightPower = axial - lateral - yaw;
             double backLeftPower   = axial - lateral + yaw;
             double backRightPower  = axial + lateral - yaw;
+
+            double intakePower = gamepad1.x ? 1.0 : 0.0;
+            double outtakeLeftPower = gamepad1.b ? 1.0 : 0.0;
+            double outtakeRightPower = gamepad1.a ? 1.0 : 0.0;
+
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -166,11 +173,15 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             frontRightDrive.setPower(frontRightPower);
             backLeftDrive.setPower(backLeftPower);
             backRightDrive.setPower(backRightPower);
+            intakeMotor.setPower(intakePower);
+            outtakeLeft.setPower(outtakeLeftPower);
+            outtakeRight.setPower(outtakeRightPower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower, frontRightPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
+            //add telemetry for intake motor?
             telemetry.update();
         }
     }}
