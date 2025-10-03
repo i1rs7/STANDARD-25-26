@@ -63,7 +63,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Omni Linear OpMode", group="Linear OpMode")
+@TeleOp(name="Standard Drive", group="Linear OpMode")
 
 public class BasicOmniOpMode_Linear extends LinearOpMode {
 
@@ -84,8 +84,7 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        // Initialize the hardware variables. Note that the strings used here must correspond
-        // to the names assigned during the robot configuration step on the DS or RC devices.
+        // Initialize the hardware variables to the config in the control hub
         frontLeftDrive = hardwareMap.get(DcMotor.class, "fL");
         backLeftDrive = hardwareMap.get(DcMotor.class, "bL");
         frontRightDrive = hardwareMap.get(DcMotor.class, "fR");
@@ -95,16 +94,7 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
         outtakeRight = hardwareMap.get(DcMotor.class, "oR");
         servoTest = hardwareMap.get(Servo.class, "push");
 
-        // ########################################################################################
-        // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
-        // ########################################################################################
-        // Most robots need the motors on one side to be reversed to drive forward.
-        // The motor reversals shown here are for a "direct drive" robot (the wheels turn the same direction as the motor shaft)
-        // If your robot has additional gear reductions or uses a right-angled drive, it's important to ensure
-        // that your motors are turning in the correct direction.  So, start out with the reversals here, BUT
-        // when you first test your robot, push the left joystick forward and observe the direction the wheels turn.
-        // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
-        // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
+        // setting direction for all DcMotors
         frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -113,7 +103,6 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
         outtakeLeft.setDirection(DcMotor.Direction.REVERSE);
         outtakeRight.setDirection(DcMotor.Direction.FORWARD);
 
-        double tgtPower = 0;
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -128,20 +117,16 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double lateral = gamepad1.left_stick_x;
-            double yaw = gamepad1.right_stick_x;
+            double axial   = -gamepad1.left_stick_y;
+            double lateral =  gamepad1.left_stick_x;
+            double yaw     =  gamepad1.right_stick_x;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
-            double frontLeftPower = axial + lateral + yaw;
+            double frontLeftPower  = axial + lateral + yaw;
             double frontRightPower = axial - lateral - yaw;
-            double backLeftPower = axial - lateral + yaw;
-            double backRightPower = axial + lateral - yaw;
-
-            double intakePower = gamepad1.x ? 0.1 : 0.0;
-            double outtakePower = gamepad1.a ? 0.9 : 0.0;
-
+            double backLeftPower   = axial - lateral + yaw;
+            double backRightPower  = axial + lateral - yaw;
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -150,33 +135,21 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             max = Math.max(max, Math.abs(backRightPower));
 
             if (max > 1.0) {
-                frontLeftPower /= max;
+                frontLeftPower  /= max;
                 frontRightPower /= max;
-                backLeftPower /= max;
-                backRightPower /= max;
+                backLeftPower   /= max;
+                backRightPower  /= max;
+            }
 
-                // servo testing.
-                if (gamepad2.y) {
-                    // move to 0 degrees.
-                    servoTest.setPosition(0);
-                } else if (gamepad2.x || gamepad2.b) {
-                    // move to 90 degrees.
-                    servoTest.setPosition(0.5);
-                } else if (gamepad2.a) {
-                    // move to 180 degrees.
-                    servoTest.setPosition(1);
-
-                }
-
-                // This is test code:
-                //
-                // Uncomment the following code to test your motor directions.
-                // Each button should make the corresponding motor run FORWARD.
-                //   1) First get all the motors to take to correct positions on the robot
-                //      by adjusting your Robot Configuration if necessary.
-                //   2) Then make sure they run in the correct direction by modifying the
-                //      the setDirection() calls above.
-                // Once the correct motors move in the correct direction re-comment this code.
+            /* This is test code:
+            //
+            // Uncomment the following code to test your motor directions.
+            // Each button should make the corresponding motor run FORWARD.
+            //   1) First get all the motors to take to correct positions on the robot
+            //      by adjusting your Robot Configuration if necessary.
+            //   2) Then make sure they run in the correct direction by modifying the
+            //      the setDirection() calls above.
+            // Once the correct motors move in the correct direction re-comment this code.
 
             /*
             frontLeftPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
@@ -185,23 +158,51 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             backRightPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
             */
 
-                // Send calculated power to wheels
-                frontLeftDrive.setPower(frontLeftPower);
-                frontRightDrive.setPower(frontRightPower);
-                backLeftDrive.setPower(backLeftPower);
-                backRightDrive.setPower(backRightPower);
-                intakeMotor.setPower(intakePower);
-                outtakeLeft.setPower(outtakePower);
-                outtakeRight.setPower(outtakePower);
+            // Send calculated power to wheels
+            frontLeftDrive.setPower(frontLeftPower);
+            frontRightDrive.setPower(frontRightPower);
+            backLeftDrive.setPower(backLeftPower);
+            backRightDrive.setPower(backRightPower);
+
+            // END OF DRIVE CODE
+
+                // Intake and Outtake Code
+                if (gamepad1.x){
+                    intakeMotor.setPower(1.0);
+                }
+                else{
+                    intakeMotor.setPower(0);
+                }
+
+                if(gamepad1.a){
+                    outtakeLeft.setPower(1.0);
+                    outtakeRight.setPower(1.0);
+                }else{
+                    outtakeLeft.setPower(0);
+                    outtakeRight.setPower(0);
+                }
+
+
+
+
+                // Push servo code
+                if (gamepad1.y) {
+                    // move to 0 degrees.
+                    servoTest.setPosition(0);
+                } else if (gamepad1.b) {
+                    // move to 180 degrees.
+                    servoTest.setPosition(0.99);
+
+                }
 
                 // Show the elapsed game time and wheel power.
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
                 telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower, frontRightPower);
                 telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
-                //add telemetry for intake motor?telemetry.addData("Servo Position", servoTest.getPosition());
+                //add telemetry for intake motor?
                 telemetry.addData("Status", "Running");
                 telemetry.update();
-            }
+
         }
     }
 }
