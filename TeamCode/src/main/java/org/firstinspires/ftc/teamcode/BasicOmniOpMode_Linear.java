@@ -78,7 +78,8 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
     private DcMotor outtakeLeft = null;
     private DcMotor outtakeRight = null;
 
-    private Servo servoTest = null;
+    private Servo pushLeft = null;
+    private Servo pushRight = null;
 
 
     @Override
@@ -92,7 +93,9 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
         intakeMotor = hardwareMap.get(DcMotor.class, "i");
         outtakeLeft = hardwareMap.get(DcMotor.class, "oL");
         outtakeRight = hardwareMap.get(DcMotor.class, "oR");
-        servoTest = hardwareMap.get(Servo.class, "push");
+        pushLeft = hardwareMap.get(Servo.class, "pL");
+        pushRight = hardwareMap.get(Servo.class, "pR");
+
 
         // setting direction for all DcMotors
         frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -141,6 +144,7 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
                 backRightPower  /= max;
             }
 
+
             /* This is test code:
             //
             // Uncomment the following code to test your motor directions.
@@ -188,10 +192,12 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
                 // Push servo code
                 if (gamepad1.y) {
                     // move to 0 degrees.
-                    servoTest.setPosition(0);
+                    pushLeft.setPosition(0);
+                    //pushRight.setPosition(0);
                 } else if (gamepad1.b) {
                     // move to 180 degrees.
-                    servoTest.setPosition(0.99);
+                    pushLeft.setPosition(0.99);
+                    //pushRight.setPosition(0.99);
 
                 }
 
