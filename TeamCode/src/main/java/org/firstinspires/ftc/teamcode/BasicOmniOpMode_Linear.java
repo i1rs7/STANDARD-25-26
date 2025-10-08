@@ -198,7 +198,15 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
                     // move to 180 degrees.
                     pushLeft.setPosition(0.99);
                     //pushRight.setPosition(0.99);
+                }
 
+                if (gamepad2.y) {
+                    pushRight.setPosition(0.5);
+                } else if (gamepad2.b) {
+                    pushRight.setPosition(0.0);
+                }
+                else if (gamepad2.a){
+                    pushRight.setPosition(0.0);
                 }
 
                 // Show the elapsed game time and wheel power.
