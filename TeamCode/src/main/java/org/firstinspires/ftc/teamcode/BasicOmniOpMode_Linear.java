@@ -191,23 +191,15 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
 
                 // Push servo code
                 if (gamepad1.y) {
-                    // move to 0 degrees.
-                    pushLeft.setPosition(0);
-                    //pushRight.setPosition(0);
+                    // shoot the ball
+                    pushLeft.setPosition(0.2);
+                    pushRight.setPosition(0.85);
                 } else if (gamepad1.b) {
-                    // move to 180 degrees.
-                    pushLeft.setPosition(0.99);
-                    //pushRight.setPosition(0.99);
+                    // reset pushers
+                    pushLeft.setPosition(0.9);
+                    pushRight.setPosition(0.3);
                 }
 
-                if (gamepad2.y) {
-                    pushRight.setPosition(0.5);
-                } else if (gamepad2.b) {
-                    pushRight.setPosition(0.0);
-                }
-                else if (gamepad2.a){
-                    pushRight.setPosition(0.0);
-                }
 
                 // Show the elapsed game time and wheel power.
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
