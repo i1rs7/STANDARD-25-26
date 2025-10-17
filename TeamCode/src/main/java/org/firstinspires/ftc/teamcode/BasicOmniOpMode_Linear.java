@@ -196,8 +196,8 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
                     pushRight.setPosition(0.85);
                 } else if (gamepad1.b) {
                     // reset pushers
-                    pushLeft.setPosition(0.9);
-                    pushRight.setPosition(0.3);
+                    pushLeft.setPosition(0.8);
+                    pushRight.setPosition(0.4);
                 }
 
 
