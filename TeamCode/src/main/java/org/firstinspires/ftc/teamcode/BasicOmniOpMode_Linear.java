@@ -78,8 +78,9 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
     private DcMotor outtakeLeft = null;
     private DcMotor outtakeRight = null;
 
-    private Servo pushLeft = null;
-    private Servo pushRight = null;
+    private Servo push = null;
+    private Servo conveyorLeft = null;
+    private Servo conveyorRight = null;
 
 
     @Override
@@ -93,8 +94,9 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
         intakeMotor = hardwareMap.get(DcMotor.class, "i");
         outtakeLeft = hardwareMap.get(DcMotor.class, "oL");
         outtakeRight = hardwareMap.get(DcMotor.class, "oR");
-        pushLeft = hardwareMap.get(Servo.class, "pL");
-        pushRight = hardwareMap.get(Servo.class, "pR");
+        push = hardwareMap.get(Servo.class, "p");
+        conveyorLeft = hardwareMap.get(Servo.class, "cL");
+        conveyorRight = hardwareMap.get(Servo.class, "cR");
 
 
         // setting direction for all DcMotors
@@ -192,12 +194,10 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
                 // Push servo code
                 if (gamepad1.y) {
                     // shoot the ball
-                    pushLeft.setPosition(0.2);
-                    pushRight.setPosition(0.85);
+                    push.setPosition(0.1);
                 } else if (gamepad1.b) {
                     // reset pushers
-                    pushLeft.setPosition(0.8);
-                    pushRight.setPosition(0.4);
+                    push.setPosition(0.8);
                 }
 
 
