@@ -78,9 +78,9 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
     private DcMotor outtakeLeft = null;
     private DcMotor outtakeRight = null;
 
-    private Servo push = null;
-    private Servo conveyorLeft = null;
-    private Servo conveyorRight = null;
+    private Servo door = null;
+//    private Servo conveyorLeft = null;
+//    private Servo conveyorRight = null;
 
 
     @Override
@@ -94,9 +94,9 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
         intakeMotor = hardwareMap.get(DcMotor.class, "i");
         outtakeLeft = hardwareMap.get(DcMotor.class, "oL");
         outtakeRight = hardwareMap.get(DcMotor.class, "oR");
-        push = hardwareMap.get(Servo.class, "p");
-        conveyorLeft = hardwareMap.get(Servo.class, "cL");
-        conveyorRight = hardwareMap.get(Servo.class, "cR");
+        door = hardwareMap.get(Servo.class, "d");
+        //conveyorLeft = hardwareMap.get(Servo.class, "cL");
+        //conveyorRight = hardwareMap.get(Servo.class, "cR");
 
 
         // setting direction for all DcMotors
@@ -132,6 +132,12 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             double frontRightPower = axial - lateral - yaw;
             double backLeftPower   = axial - lateral + yaw;
             double backRightPower  = axial + lateral - yaw;
+            
+            //brakes
+            frontLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            frontRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            backLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            backRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -189,15 +195,25 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
                 }
 
 
+                // Push servo code, continuous
+//                if (gamepad1.left_bumper) {
+//                    // shoot the ball
+//                    push.setPosition(0.7);
+//                    sleep(500);
+//                    push.setPosition(0.5);
+//                } else if (gamepad1.right_bumper) {
+//                    while (gamepad1.right_bumper && opModeIsActive()) {
+//                        push.setPosition(0.7);
+//                    }
+//                    push.setPosition(0.5);
+//                }
 
-
-                // Push servo code
                 if (gamepad1.y) {
-                    // shoot the ball
-                    push.setPosition(0.1);
+                    // door servo at position zero
+                    door.setPosition(0.1);
                 } else if (gamepad1.b) {
-                    // reset pushers
-                    push.setPosition(0.8);
+                    // door servo at position one
+                    door.setPosition(0.9);
                 }
 
 
