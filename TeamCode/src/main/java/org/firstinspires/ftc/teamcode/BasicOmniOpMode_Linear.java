@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -104,7 +105,7 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
         backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        intakeMotor.setDirection(DcMotor.Direction.REVERSE);
+        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
         outtakeLeft.setDirection(DcMotor.Direction.REVERSE);
         outtakeRight.setDirection(DcMotor.Direction.FORWARD);
 
@@ -187,8 +188,8 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
                 }
 
                 if(gamepad1.a){
-                    outtakeLeft.setPower(1.0);
-                    outtakeRight.setPower(1.0);
+                    outtakeLeft.setPower(0.5);
+                    outtakeRight.setPower(0.5);
                 }else{
                     outtakeLeft.setPower(0);
                     outtakeRight.setPower(0);
@@ -210,10 +211,10 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
 
                 if (gamepad1.y) {
                     // door servo at position zero
-                    door.setPosition(0.1);
+                    door.setPosition(0.5);
                 } else if (gamepad1.b) {
                     // door servo at position one
-                    door.setPosition(0.9);
+                    door.setPosition(0.8);
                 }
 
 
