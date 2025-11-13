@@ -83,7 +83,6 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
 //    private Servo conveyorLeft = null;
 //    private Servo conveyorRight = null;
 
-
     @Override
     public void runOpMode() {
 
@@ -99,7 +98,6 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
         //conveyorLeft = hardwareMap.get(Servo.class, "cL");
         //conveyorRight = hardwareMap.get(Servo.class, "cR");
 
-
         // setting direction for all DcMotors
         frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -109,6 +107,12 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
         outtakeLeft.setDirection(DcMotor.Direction.REVERSE);
         outtakeRight.setDirection(DcMotor.Direction.FORWARD);
 
+        //run using encoder
+        //outtakeLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //outtakeRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        outtakeLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        outtakeRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -180,16 +184,21 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             // END OF DRIVE CODE
 
                 // Intake and Outtake Code
-                if (gamepad1.x){
+                if (gamepad1.left_bumper){
+                    intakeMotor.setDirection(DcMotor.Direction.FORWARD);
+                    intakeMotor.setPower(1.0);
+                }
+                else if (gamepad1.right_bumper){
+                    intakeMotor.setDirection(DcMotor.Direction.REVERSE);
                     intakeMotor.setPower(1.0);
                 }
                 else{
                     intakeMotor.setPower(0);
                 }
 
-                if(gamepad1.a){
-                    outtakeLeft.setPower(0.5);
-                    outtakeRight.setPower(0.5);
+                if(gamepad1.right_trigger == 1.0){
+                    outtakeLeft.setVelocity(200);
+                    outtakeRight.setVelocity(200);
                 }else{
                     outtakeLeft.setPower(0);
                     outtakeRight.setPower(0);
