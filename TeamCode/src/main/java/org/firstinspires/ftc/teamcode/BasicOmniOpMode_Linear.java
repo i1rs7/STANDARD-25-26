@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -111,8 +112,8 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
         //outtakeLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //outtakeRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        outtakeLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        outtakeRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //outtakeLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //outtakeRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -196,10 +197,18 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
                     intakeMotor.setPower(0);
                 }
 
+                //double outtakeLeft_Position = outtakeLeft.getCurrentPosition();
+                //double outtakeRight_Position = outtakeRight.getCurrentPosition();
+
                 if(gamepad1.right_trigger == 1.0){
-                    outtakeLeft.setVelocity(200);
-                    outtakeRight.setVelocity(200);
+                    //outtakeLeft.setVelocity(75);
+                    //outtakeRight.setVelocity(75);
+                    outtakeLeft.setPower(0.315);
+                    outtakeRight.setPower(0.315);
+
                 }else{
+                    //outtakeLeft.setVelocity(0);
+                    //outtakeRight.setVelocity(0);
                     outtakeLeft.setPower(0);
                     outtakeRight.setPower(0);
                 }
@@ -229,7 +238,13 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
 
                 // Show the elapsed game time and wheel power.
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
-                telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower, frontRightPower);
+                //telemetry.addData("Outtake Left Encoder Ticks: ", outtakeLeft.getVelocity());
+                //telemetry.addData("Outtake Left Position", outtakeLeft_Position);
+                //telemetry.addData("Outtake Right Encoder Ticks: ", outtakeRight.getVelocity());
+                //telemetry.addData("Outtake Right Position", outtakeRight_Position);
+
+
+            telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower, frontRightPower);
                 telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
                 //add telemetry for intake motor?
                 telemetry.addData("Status", "Running");
