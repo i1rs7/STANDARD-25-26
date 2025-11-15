@@ -119,47 +119,13 @@ public class Red_RobotAutoDriveByTime_Linear extends LinearOpMode {
         outtakeLeft.setPower(0.315);
         outtakeRight.setPower(0.315);
 
-        // Step 1:  move forward
-        frontLeftDrive.setPower(FORWARD_SPEED);
-        backLeftDrive.setPower(FORWARD_SPEED);
-        frontRightDrive.setPower(FORWARD_SPEED);
-        backRightDrive.setPower(FORWARD_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.85)) {
-            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-        // Step 2:  Rotate to accurate point
-        frontLeftDrive.setPower(-TURN_SPEED);
-        backLeftDrive.setPower(-TURN_SPEED);
-        frontRightDrive.setPower(TURN_SPEED);
-        backRightDrive.setPower(TURN_SPEED);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.8)) {
+        while (opModeIsActive() && (runtime.seconds() < 4.0)) {
             telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
 
-        //step 3: back up
 
-        frontLeftDrive.setPower(-FORWARD_SPEED);
-        backLeftDrive.setPower(-FORWARD_SPEED);
-        frontRightDrive.setPower(-FORWARD_SPEED);
-        backRightDrive.setPower(-FORWARD_SPEED);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.25)) {
-            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-        //step 4: stop
-
-        frontLeftDrive.setPower(0);
-        frontRightDrive.setPower(0);
-        backLeftDrive.setPower(0);
-        backRightDrive.setPower(0);
-        sleep(500);
 
         //Step 5: shoot three balls
 
@@ -189,32 +155,33 @@ public class Red_RobotAutoDriveByTime_Linear extends LinearOpMode {
             }
         }
 
-            //Step 6: straighten out
-            frontLeftDrive.setPower(-TURN_SPEED);
-            backLeftDrive.setPower(-TURN_SPEED);
-            frontRightDrive.setPower(TURN_SPEED);
-            backRightDrive.setPower(TURN_SPEED);
-            runtime.reset();
-            while (opModeIsActive() && (runtime.seconds() < 0.85)) {
-                telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
-            }
+        outtakeLeft.setPower(0);
+        outtakeRight.setPower(0);
 
-            //Step 7: move left
-            frontLeftDrive.setPower(-FORWARD_SPEED);
-            backLeftDrive.setPower(FORWARD_SPEED);
-            frontRightDrive.setPower(FORWARD_SPEED);
-            backRightDrive.setPower(-FORWARD_SPEED);
+        //Step 6: straighten out
+        frontLeftDrive.setPower(-TURN_SPEED);
+        backLeftDrive.setPower(-TURN_SPEED);
+        frontRightDrive.setPower(TURN_SPEED);
+        backRightDrive.setPower(TURN_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.85)) {
+            telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
 
-            runtime.reset();
-            while (opModeIsActive() && (runtime.seconds() < 0.17)) {
-                telemetry.addData("Path", "Leg 4: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
-            }
+        //Step 7: move right
+        frontLeftDrive.setPower(-FORWARD_SPEED);
+        backLeftDrive.setPower(FORWARD_SPEED);
+        frontRightDrive.setPower(FORWARD_SPEED);
+        backRightDrive.setPower(-FORWARD_SPEED);
+
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.17)) {
+            telemetry.addData("Path", "Leg 4: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
 
         //Step 8: move back, intake balls
-        outtakeLeft.setPower(0.0);
-        outtakeRight.setPower(0.0);
         intakeMotor.setDirection(DcMotor.Direction.REVERSE);
         intakeMotor.setPower(1.0);
         frontLeftDrive.setPower(-FORWARD_SPEED);
@@ -227,7 +194,7 @@ public class Red_RobotAutoDriveByTime_Linear extends LinearOpMode {
             telemetry.update();
         }
 
-        //Step 9: move right slightly
+        //Step 9: move left slightly
         frontLeftDrive.setPower(FORWARD_SPEED);
         backLeftDrive.setPower(-FORWARD_SPEED);
         frontRightDrive.setPower(-FORWARD_SPEED);
@@ -260,16 +227,71 @@ public class Red_RobotAutoDriveByTime_Linear extends LinearOpMode {
             telemetry.update();
         }
 
+        // Step 13:  Stop
+        frontLeftDrive.setPower(0);
+        backLeftDrive.setPower(0);
+        frontRightDrive.setPower(0);
+        backRightDrive.setPower(0);
+        outtakeLeft.setPower(0.315);
+        outtakeRight.setPower(0.315);
+
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 4.0)) {
+            telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
         //step 13: shoot again (not done yet)
 
-            // Step 13:  Stop
-            frontLeftDrive.setPower(0);
-            backLeftDrive.setPower(0);
-            frontRightDrive.setPower(0);
-            backRightDrive.setPower(0);
+        for (float i = 0.0F; i < 3; i++) {
+            outtakeLeft.setPower(0.315);
+            outtakeRight.setPower(0.315);
+            intakeMotor.setDirection(DcMotor.Direction.FORWARD);
+            intakeMotor.setPower(SHOOTING_SPEED);
+            runtime.reset();
+            while (opModeIsActive() && (runtime.seconds() < 0.1)) {
+                telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
+                telemetry.update();
+            }
 
-            telemetry.addData("Path", "Complete");
-            telemetry.update();
-            sleep(1000);
+            intakeMotor.setDirection(DcMotor.Direction.REVERSE);
+            intakeMotor.setPower(SHOOTING_SPEED);
+            runtime.reset();
+            while (opModeIsActive() && (runtime.seconds() < 0.2+i/7)) {
+                telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
+                telemetry.update();
+            }
+
+            intakeMotor.setPower(0);
+            runtime.reset();
+            while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+                telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
+                telemetry.update();
+            }
         }
+
+        outtakeLeft.setPower(0);
+        outtakeRight.setPower(0);
+
+        //step 10: move left
+        frontLeftDrive.setPower(FORWARD_SPEED);
+        backLeftDrive.setPower(-FORWARD_SPEED);
+        frontRightDrive.setPower(-FORWARD_SPEED);
+        backRightDrive.setPower(FORWARD_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+            telemetry.addData("Path", "Leg 4: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+
+        // Step 13:  Stop
+        frontLeftDrive.setPower(0);
+        backLeftDrive.setPower(0);
+        frontRightDrive.setPower(0);
+        backRightDrive.setPower(0);
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+        sleep(1000);
     }
+}
