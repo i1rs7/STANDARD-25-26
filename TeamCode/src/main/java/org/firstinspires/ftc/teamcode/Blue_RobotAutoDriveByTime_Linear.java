@@ -109,12 +109,35 @@ public class Blue_RobotAutoDriveByTime_Linear extends LinearOpMode {
         frontRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        outtakeLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        outtakeRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Wait for the game to start (driver presses START)
         waitForStart();
 
         // Step through each leg of the path, ensuring that the OpMode has not been stopped along the way.
 
+
+
+        //step 1: go back a little
+        frontLeftDrive.setPower(-FORWARD_SPEED);
+        backLeftDrive.setPower(-FORWARD_SPEED);
+        frontRightDrive.setPower(-FORWARD_SPEED);
+        backRightDrive.setPower(-FORWARD_SPEED);
+
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+            telemetry.addData("Path", "Leg 4: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+        // Step 2:  Stop
+        frontLeftDrive.setPower(0);
+        backLeftDrive.setPower(0);
+        frontRightDrive.setPower(0);
+        backRightDrive.setPower(0);
+
+        //step 3: get ready
         door.setPosition(0.8);
         outtakeLeft.setPower(0.315);
         outtakeRight.setPower(0.315);
@@ -126,8 +149,7 @@ public class Blue_RobotAutoDriveByTime_Linear extends LinearOpMode {
         }
 
 
-
-        //Step 5: shoot three balls
+        //Step 4: shoot three balls
 
         for (float i = 0.0F; i < 3; i++) {
 
@@ -158,30 +180,30 @@ public class Blue_RobotAutoDriveByTime_Linear extends LinearOpMode {
         outtakeLeft.setPower(0);
         outtakeRight.setPower(0);
 
-        //Step 6: straighten out
+        //Step 5: straighten out
         frontLeftDrive.setPower(TURN_SPEED);
         backLeftDrive.setPower(TURN_SPEED);
         frontRightDrive.setPower(-TURN_SPEED);
         backRightDrive.setPower(-TURN_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.85)) {
+        while (opModeIsActive() && (runtime.seconds() < 0.8)) {
             telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
 
-        //Step 7: move right
+        //Step 6: move right
         frontLeftDrive.setPower(FORWARD_SPEED);
         backLeftDrive.setPower(-FORWARD_SPEED);
         frontRightDrive.setPower(-FORWARD_SPEED);
         backRightDrive.setPower(FORWARD_SPEED);
 
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.17)) {
+        while (opModeIsActive() && (runtime.seconds() < 0.4)) {
             telemetry.addData("Path", "Leg 4: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
 
-        //Step 8: move back, intake balls
+        //Step 7: move back, intake balls
         intakeMotor.setDirection(DcMotor.Direction.REVERSE);
         intakeMotor.setPower(1.0);
         frontLeftDrive.setPower(-FORWARD_SPEED);
@@ -189,23 +211,23 @@ public class Blue_RobotAutoDriveByTime_Linear extends LinearOpMode {
         frontRightDrive.setPower(-FORWARD_SPEED);
         backRightDrive.setPower(-FORWARD_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+        while (opModeIsActive() && (runtime.seconds() < 1.2)) {
             telemetry.addData("Path", "Leg 4: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
 
-        //Step 9: move left slightly
+        //Step 8: move left slightly
         frontLeftDrive.setPower(-FORWARD_SPEED);
         backLeftDrive.setPower(FORWARD_SPEED);
         frontRightDrive.setPower(FORWARD_SPEED);
         backRightDrive.setPower(-FORWARD_SPEED);
 
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.17)) {
+        while (opModeIsActive() && (runtime.seconds() < 0.1)) {
             telemetry.addData("Path", "Leg 4: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-        //step 10: move forward
+        //step 9: move forward
         frontLeftDrive.setPower(FORWARD_SPEED);
         backLeftDrive.setPower(FORWARD_SPEED);
         frontRightDrive.setPower(FORWARD_SPEED);
@@ -216,18 +238,18 @@ public class Blue_RobotAutoDriveByTime_Linear extends LinearOpMode {
             telemetry.update();
         }
 
-        //Step 11: straighten out
+        //Step 10: straighten out
         frontLeftDrive.setPower(-TURN_SPEED);
         backLeftDrive.setPower(-TURN_SPEED);
         frontRightDrive.setPower(TURN_SPEED);
         backRightDrive.setPower(TURN_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.85)) {
+        while (opModeIsActive() && (runtime.seconds() < 0.9)) {
             telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
 
-        // Step 13:  Stop
+        // Step 11:  Stop
         frontLeftDrive.setPower(0);
         backLeftDrive.setPower(0);
         frontRightDrive.setPower(0);
@@ -240,6 +262,19 @@ public class Blue_RobotAutoDriveByTime_Linear extends LinearOpMode {
             telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
+
+        // step 12: lower balls a little bit
+        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
+        intakeMotor.setPower(SHOOTING_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.1)) {
+            telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+        intakeMotor.setPower(0);
+
+
         //step 13: shoot again (not done yet)
 
         for (float i = 0.0F; i < 3; i++) {
@@ -248,7 +283,7 @@ public class Blue_RobotAutoDriveByTime_Linear extends LinearOpMode {
             intakeMotor.setDirection(DcMotor.Direction.FORWARD);
             intakeMotor.setPower(SHOOTING_SPEED);
             runtime.reset();
-            while (opModeIsActive() && (runtime.seconds() < 0.1)) {
+            while (opModeIsActive() && (runtime.seconds() < 0.15)) {
                 telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
                 telemetry.update();
             }
@@ -256,7 +291,7 @@ public class Blue_RobotAutoDriveByTime_Linear extends LinearOpMode {
             intakeMotor.setDirection(DcMotor.Direction.REVERSE);
             intakeMotor.setPower(SHOOTING_SPEED);
             runtime.reset();
-            while (opModeIsActive() && (runtime.seconds() < 0.2+i/7)) {
+            while (opModeIsActive() && (runtime.seconds() < 0.2+i/5)) {
                 telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
                 telemetry.update();
             }
