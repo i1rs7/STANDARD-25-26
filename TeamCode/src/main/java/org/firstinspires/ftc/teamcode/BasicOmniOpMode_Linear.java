@@ -185,11 +185,11 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             // END OF DRIVE CODE
 
                 // Intake and Outtake Code
-                if (gamepad1.left_bumper){
+                if (gamepad2.left_bumper){
                     intakeMotor.setDirection(DcMotor.Direction.FORWARD);
                     intakeMotor.setPower(1.0);
                 }
-                else if (gamepad1.right_bumper){
+                else if (gamepad2.right_bumper){
                     intakeMotor.setDirection(DcMotor.Direction.REVERSE);
                     intakeMotor.setPower(1.0);
                 }
@@ -200,7 +200,7 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
                 //double outtakeLeft_Position = outtakeLeft.getCurrentPosition();
                 //double outtakeRight_Position = outtakeRight.getCurrentPosition();
 
-                if(gamepad1.right_trigger == 1.0){
+                if(gamepad2.right_trigger == 1.0){
                     //outtakeLeft.setVelocity(75);
                     //outtakeRight.setVelocity(75);
                     outtakeLeft.setPower(0.315);
