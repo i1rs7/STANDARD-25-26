@@ -275,7 +275,7 @@ public class Red_RobotAutoDriveByTime_Linear extends LinearOpMode {
             intakeMotor.setDirection(DcMotor.Direction.FORWARD);
             intakeMotor.setPower(SHOOTING_SPEED);
             runtime.reset();
-            while (opModeIsActive() && (runtime.seconds() < 0.15)) {
+            while (opModeIsActive() && (runtime.seconds() < 0.1)) {
                 telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
                 telemetry.update();
             }
@@ -283,7 +283,7 @@ public class Red_RobotAutoDriveByTime_Linear extends LinearOpMode {
             intakeMotor.setDirection(DcMotor.Direction.REVERSE);
             intakeMotor.setPower(SHOOTING_SPEED);
             runtime.reset();
-            while (opModeIsActive() && (runtime.seconds() < 0.2+i/5)) {
+            while (opModeIsActive() && (runtime.seconds() < 0.2+i/7)) {
                 telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
                 telemetry.update();
             }
