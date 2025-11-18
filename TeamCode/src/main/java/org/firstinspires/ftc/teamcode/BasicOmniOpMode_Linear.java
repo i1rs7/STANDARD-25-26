@@ -201,13 +201,17 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
 
                 //double outtakeLeft_Position = outtakeLeft.getCurrentPosition();
                 //double outtakeRight_Position = outtakeRight.getCurrentPosition();
-
+                if (gamepad1.left_trigger == 1.0) {
+                    outtakeLeft.setPower(0.315);
+                    outtakeRight.setPower(0.315);
+                    runtime.reset();
+                }
                 if(gamepad1.right_trigger == 1.0){
 
-                    intakeMotor.setDirection(DcMotor.Direction.FORWARD);
-                    intakeMotor.setPower(SHOOTING_SPEED);
-                    runtime.reset();
+
                     while (opModeIsActive() && (runtime.seconds() < 0.1)) {
+                        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
+                        intakeMotor.setPower(SHOOTING_SPEED);
                         telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
                         telemetry.update();
                     }
