@@ -77,6 +77,8 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
     private DcMotor backRightDrive = null;
     private DcMotor intakeMotor = null;
 
+    static final double SHOOTING_SPEED = 1.0;
+
     private DcMotor outtakeLeft = null;
     private DcMotor outtakeRight = null;
 
@@ -185,11 +187,11 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             // END OF DRIVE CODE
 
                 // Intake and Outtake Code
-                if (gamepad2.left_bumper){
+                if (gamepad1.left_bumper){
                     intakeMotor.setDirection(DcMotor.Direction.FORWARD);
                     intakeMotor.setPower(1.0);
                 }
-                else if (gamepad2.right_bumper){
+                else if (gamepad1.right_bumper){
                     intakeMotor.setDirection(DcMotor.Direction.REVERSE);
                     intakeMotor.setPower(1.0);
                 }
@@ -200,12 +202,48 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
                 //double outtakeLeft_Position = outtakeLeft.getCurrentPosition();
                 //double outtakeRight_Position = outtakeRight.getCurrentPosition();
 
-                if(gamepad2.right_trigger == 1.0){
+                if(gamepad1.right_trigger == 1.0){
+
+                    intakeMotor.setDirection(DcMotor.Direction.FORWARD);
+                    intakeMotor.setPower(SHOOTING_SPEED);
+                    runtime.reset();
+                    while (opModeIsActive() && (runtime.seconds() < 0.1)) {
+                        telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
+                        telemetry.update();
+                    }
+
+                    intakeMotor.setPower(0);
+                    for (float i = 0.0F; i < 3; i++) {
+                        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
+                        intakeMotor.setPower(SHOOTING_SPEED);
+                        runtime.reset();
+                        while (opModeIsActive() && (runtime.seconds() < 0.1)) {
+                            telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
+                            telemetry.update();
+                        }
+
+                        intakeMotor.setDirection(DcMotor.Direction.REVERSE);
+                        intakeMotor.setPower(SHOOTING_SPEED);
+                        runtime.reset();
+                        while (opModeIsActive() && (runtime.seconds() < 0.2+i/7)) {
+                            telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
+                            telemetry.update();
+                        }
+
+                        intakeMotor.setPower(0);
+                        runtime.reset();
+                        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+                            telemetry.addData("Path", "Leg 2: %4.1f S Elapsed", runtime.seconds());
+                            telemetry.update();
+                        }
+                    }
+
+                    /*
                     //outtakeLeft.setVelocity(75);
                     //outtakeRight.setVelocity(75);
                     outtakeLeft.setPower(0.315);
                     outtakeRight.setPower(0.315);
-
+*/
                 }else{
                     //outtakeLeft.setVelocity(0);
                     //outtakeRight.setVelocity(0);
