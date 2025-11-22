@@ -94,8 +94,6 @@ public class originalBasicOmniOpMode_Linear extends LinearOpMode {
         outtakeLeft = hardwareMap.get(DcMotor.class, "oL");
         outtakeRight = hardwareMap.get(DcMotor.class, "oR");
         door = hardwareMap.get(Servo.class, "d");
-        //conveyorLeft = hardwareMap.get(Servo.class, "cL");
-        //conveyorRight = hardwareMap.get(Servo.class, "cR");
 
         // setting direction for all DcMotors
         frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -106,12 +104,6 @@ public class originalBasicOmniOpMode_Linear extends LinearOpMode {
         outtakeLeft.setDirection(DcMotor.Direction.REVERSE);
         outtakeRight.setDirection(DcMotor.Direction.FORWARD);
 
-        //run using encoder
-        //outtakeLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //outtakeRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        //outtakeLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //outtakeRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -142,9 +134,9 @@ public class originalBasicOmniOpMode_Linear extends LinearOpMode {
             frontRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             backLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             backRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             outtakeLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             outtakeRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -185,7 +177,7 @@ public class originalBasicOmniOpMode_Linear extends LinearOpMode {
 
             // END OF DRIVE CODE
 
-                // Intake and Outtake Code
+                // Intake and reverse intake Code
                 if (gamepad1.left_bumper){
                     intakeMotor.setDirection(DcMotor.Direction.FORWARD);
                     intakeMotor.setPower(1.0);
@@ -198,36 +190,18 @@ public class originalBasicOmniOpMode_Linear extends LinearOpMode {
                     intakeMotor.setPower(0);
                 }
 
-                //double outtakeLeft_Position = outtakeLeft.getCurrentPosition();
-                //double outtakeRight_Position = outtakeRight.getCurrentPosition();
+                //outtake flywheels code
 
                 if(gamepad1.right_trigger == 1.0){
-                    //outtakeLeft.setVelocity(75);
-                    //outtakeRight.setVelocity(75);
                     outtakeLeft.setPower(0.315);
                     outtakeRight.setPower(0.315);
 
                 }else{
-                    //outtakeLeft.setVelocity(0);
-                    //outtakeRight.setVelocity(0);
                     outtakeLeft.setPower(0);
                     outtakeRight.setPower(0);
                 }
 
-
-                // Push servo code, continuous
-//                if (gamepad1.left_bumper) {
-//                    // shoot the ball
-//                    push.setPosition(0.7);
-//                    sleep(500);
-//                    push.setPosition(0.5);
-//                } else if (gamepad1.right_bumper) {
-//                    while (gamepad1.right_bumper && opModeIsActive()) {
-//                        push.setPosition(0.7);
-//                    }
-//                    push.setPosition(0.5);
-//                }
-
+                //old door servo code
                 if (gamepad1.y) {
                     // door servo at position zero
                     door.setPosition(0.5);
