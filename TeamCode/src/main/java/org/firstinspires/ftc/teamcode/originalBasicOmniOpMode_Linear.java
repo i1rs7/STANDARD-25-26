@@ -32,8 +32,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -65,9 +63,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Standard Drive 2 driver", group="Linear OpMode")
+@TeleOp(name="Standard Drive 1 driver", group="Linear OpMode")
 
-public class BasicOmniOpMode_Linear extends LinearOpMode {
+public class originalBasicOmniOpMode_Linear extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -147,6 +145,7 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             outtakeLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             outtakeRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
             max = Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower));
@@ -187,11 +186,11 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             // END OF DRIVE CODE
 
                 // Intake and Outtake Code
-                if (gamepad2.left_bumper){
+                if (gamepad1.left_bumper){
                     intakeMotor.setDirection(DcMotor.Direction.FORWARD);
                     intakeMotor.setPower(1.0);
                 }
-                else if (gamepad2.right_bumper){
+                else if (gamepad1.right_bumper){
                     intakeMotor.setDirection(DcMotor.Direction.REVERSE);
                     intakeMotor.setPower(1.0);
                 }
@@ -199,8 +198,12 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
                     intakeMotor.setPower(0);
                 }
 
+                //double outtakeLeft_Position = outtakeLeft.getCurrentPosition();
+                //double outtakeRight_Position = outtakeRight.getCurrentPosition();
 
-                if(gamepad2.right_trigger == 1.0){
+                if(gamepad1.right_trigger == 1.0){
+                    //outtakeLeft.setVelocity(75);
+                    //outtakeRight.setVelocity(75);
                     outtakeLeft.setPower(0.315);
                     outtakeRight.setPower(0.315);
 
