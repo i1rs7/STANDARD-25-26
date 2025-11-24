@@ -200,14 +200,22 @@ public class EncoderBasicOmniOpMode_Linear extends LinearOpMode {
 
 
                 if(gamepad2.right_trigger == 1.0){
-                    outtakeLeft.setPower(0.315);
-                    outtakeRight.setPower(0.315);
+                    outtakeLeft.setVelocity(800);
+                    outtakeRight.setVelocity(800);
 
-                }else{
+                }else if (gamepad2.a){
+                    outtakeLeft.setVelocity(950);
+                    outtakeRight.setVelocity(950);
+                }
+                else if (gamepad2.b){
+                    outtakeLeft.setVelocity(700);
+                    outtakeRight.setVelocity(700);
+                }
+                else{
                     //outtakeLeft.setVelocity(0);
                     //outtakeRight.setVelocity(0);
-                    outtakeLeft.setPower(0);
-                    outtakeRight.setPower(0);
+                    outtakeLeft.setVelocity(0);
+                    outtakeRight.setVelocity(0);
                 }
 
 
