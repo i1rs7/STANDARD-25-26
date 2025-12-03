@@ -33,7 +33,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -65,55 +64,52 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Standard Drive 2 driver", group="Linear OpMode")
+@TeleOp(name="Standard Drive", group="Linear OpMode")
 
 public class BasicOmniOpMode_Linear extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor frontLeftDrive = null;
-    private DcMotor backLeftDrive = null;
-    private DcMotor frontRightDrive = null;
-    private DcMotor backRightDrive = null;
-    private DcMotor intakeMotor = null;
+    private DcMotorEx frontLeftDrive = null;
+    private DcMotorEx backLeftDrive = null;
+    private DcMotorEx frontRightDrive = null;
+    private DcMotorEx backRightDrive = null;
+    private DcMotorEx intakeMotor = null;
 
-    private DcMotor outtakeLeft = null;
-    private DcMotor outtakeRight = null;
+    private DcMotorEx outtakeLeft = null;
+    private DcMotorEx outtakeRight = null;
 
-    private Servo door = null;
-//    private Servo conveyorLeft = null;
-//    private Servo conveyorRight = null;
+
+    static final double target_RPM_close = 725;
+    static final double target_RPM_far = 975;
+    static final double target_range = 25;
 
     @Override
     public void runOpMode() {
 
         // Initialize the hardware variables to the config in the control hub
-        frontLeftDrive = hardwareMap.get(DcMotor.class, "fL");
-        backLeftDrive = hardwareMap.get(DcMotor.class, "bL");
-        frontRightDrive = hardwareMap.get(DcMotor.class, "fR");
-        backRightDrive = hardwareMap.get(DcMotor.class, "bR");
-        intakeMotor = hardwareMap.get(DcMotor.class, "i");
-        outtakeLeft = hardwareMap.get(DcMotor.class, "oL");
-        outtakeRight = hardwareMap.get(DcMotor.class, "oR");
-        door = hardwareMap.get(Servo.class, "d");
-        //conveyorLeft = hardwareMap.get(Servo.class, "cL");
-        //conveyorRight = hardwareMap.get(Servo.class, "cR");
+        frontLeftDrive = hardwareMap.get(DcMotorEx.class, "fL");
+        backLeftDrive = hardwareMap.get(DcMotorEx.class, "bL");
+        frontRightDrive = hardwareMap.get(DcMotorEx.class, "fR");
+        backRightDrive = hardwareMap.get(DcMotorEx.class, "bR");
+        intakeMotor = hardwareMap.get(DcMotorEx.class, "i");
+        outtakeLeft = hardwareMap.get(DcMotorEx.class, "oL");
+        outtakeRight = hardwareMap.get(DcMotorEx.class, "oR");
 
         // setting direction for all DcMotors
         frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
+        intakeMotor.setDirection(DcMotor.Direction.REVERSE); // intake up
         outtakeLeft.setDirection(DcMotor.Direction.REVERSE);
         outtakeRight.setDirection(DcMotor.Direction.FORWARD);
 
-        //run using encoder
-        //outtakeLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //outtakeRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        //outtakeLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //outtakeRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        outtakeLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        outtakeRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -144,6 +140,7 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             frontRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             backLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             backRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             outtakeLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             outtakeRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -160,24 +157,6 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
                 backRightPower  /= max;
             }
 
-
-            /* This is test code:
-            //
-            // Uncomment the following code to test your motor directions.
-            // Each button should make the corresponding motor run FORWARD.
-            //   1) First get all the motors to take to correct positions on the robot
-            //      by adjusting your Robot Configuration if necessary.
-            //   2) Then make sure they run in the correct direction by modifying the
-            //      the setDirection() calls above.
-            // Once the correct motors move in the correct direction re-comment this code.
-
-            /*
-            frontLeftPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
-            backLeftPower   = gamepad1.a ? 1.0 : 0.0;  // A gamepad
-            frontRightPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
-            backRightPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
-            */
-
             // Send calculated power to wheels
             frontLeftDrive.setPower(frontLeftPower);
             frontRightDrive.setPower(frontRightPower);
@@ -186,12 +165,14 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
 
             // END OF DRIVE CODE
 
-                // Intake and Outtake Code
+                // Intake Code
                 if (gamepad2.left_bumper){
+                    //intake down
                     intakeMotor.setDirection(DcMotor.Direction.FORWARD);
                     intakeMotor.setPower(1.0);
                 }
                 else if (gamepad2.right_bumper){
+                    //intake up
                     intakeMotor.setDirection(DcMotor.Direction.REVERSE);
                     intakeMotor.setPower(1.0);
                 }
@@ -199,48 +180,49 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
                     intakeMotor.setPower(0);
                 }
 
+                // prepare for shooting, bring balls down a little
+                if (gamepad2.y){
+                    intakeMotor.setDirection(DcMotor.Direction.FORWARD);
+                    intakeMotor.setPower(1.0);
+                }
 
-                if(gamepad2.right_trigger == 1.0){
-                    outtakeLeft.setPower(0.315);
-                    outtakeRight.setPower(0.315);
+                //outtake code
+                if (gamepad2.right_trigger == 1.0){
+                    outtakeLeft.setVelocity(target_RPM_close);
+                    outtakeRight.setVelocity(target_RPM_close);
+                }
+                else if (gamepad2.left_trigger == 1.0){
+                    outtakeLeft.setVelocity(target_RPM_far);
+                    outtakeRight.setVelocity(target_RPM_far);
 
-                }else{
-                    //outtakeLeft.setVelocity(0);
-                    //outtakeRight.setVelocity(0);
+                }
+                else{
                     outtakeLeft.setPower(0);
                     outtakeRight.setPower(0);
                 }
 
-
-                // Push servo code, continuous
-//                if (gamepad1.left_bumper) {
-//                    // shoot the ball
-//                    push.setPosition(0.7);
-//                    sleep(500);
-//                    push.setPosition(0.5);
-//                } else if (gamepad1.right_bumper) {
-//                    while (gamepad1.right_bumper && opModeIsActive()) {
-//                        push.setPosition(0.7);
-//                    }
-//                    push.setPosition(0.5);
-//                }
-
-                if (gamepad1.y) {
-                    // door servo at position zero
-                    door.setPosition(0.5);
-                } else if (gamepad1.b) {
-                    // door servo at position one
-                    door.setPosition(0.8);
+                // rumbles
+                while((gamepad2.right_trigger == 1.0) && (outtakeRight.getVelocity() >= target_RPM_close-target_range && outtakeRight.getVelocity() <=  target_RPM_close+target_range) && (outtakeLeft.getVelocity() >= target_RPM_close-target_range && outtakeLeft.getVelocity() <= target_RPM_close+target_range )){
+                    gamepad2.rumble(100);
                 }
+                while((gamepad2.left_trigger == 1.0) && (outtakeRight.getVelocity() >= target_RPM_far-target_range && outtakeRight.getVelocity() <=  target_RPM_far+target_range) && (outtakeLeft.getVelocity() >= target_RPM_far-target_range && outtakeLeft.getVelocity() <= target_RPM_far+target_range )){
+                    gamepad2.rumble(100);
+                }
+
+
+                //if (gamepad1.y) {
+                //    // door servo at position zero
+                    //door.setPosition(0.5);
+                //} else if (gamepad1.b) {
+                    // door servo at position one
+                //    door.setPosition(0.8);
+                //}
 
 
                 // Show the elapsed game time and wheel power.
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
-                //telemetry.addData("Outtake Left Encoder Ticks: ", outtakeLeft.getVelocity());
-                //telemetry.addData("Outtake Left Position", outtakeLeft_Position);
-                //telemetry.addData("Outtake Right Encoder Ticks: ", outtakeRight.getVelocity());
-                //telemetry.addData("Outtake Right Position", outtakeRight_Position);
-
+                telemetry.addData("Outtake Left Encoder Ticks: ", outtakeLeft.getVelocity());
+                telemetry.addData("Outtake Right Encoder Ticks: ", outtakeRight.getVelocity());
 
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower, frontRightPower);
                 telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
