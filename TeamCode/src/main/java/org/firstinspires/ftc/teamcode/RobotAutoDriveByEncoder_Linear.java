@@ -85,11 +85,13 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
                                                       (DRIVE_WHEEL_DIAMETER_INCHES * 3.1415);
 
     //intake counts per revolution conversion to distance
+    static final double     ARTIFACT_DIAMETER = 5.0;
     static final double     INTAKE_COUNTS_PER_MOTOR_REV    = 384.5 ; //
     static final double     INTAKE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing
     static final double     INTAKE_WHEEL_DIAMETER_INCHES   = 1.88976 ;     // For figuring circumference
     static final double     INTAKE_COUNTS_PER_INCH         = (INTAKE_COUNTS_PER_MOTOR_REV * INTAKE_GEAR_REDUCTION) /
                                                         (INTAKE_WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double     INTAKE_TO_ARTIFACT_DISTANCE_CONVERSION = ARTIFACT_DIAMETER/INTAKE_WHEEL_DIAMETER_INCHES;
 
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
@@ -158,7 +160,7 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        intakeByEncoder(INTAKE_SPEED,10,5.0); // Intake balls 10 inches with 5 sec timeout
+        intakeByEncoder(INTAKE_SPEED,1,5.0); // Intake balls 10 inches with 5 sec timeout
         //encoderDrive(DRIVE_SPEED,  75,  75, 5.0);  // S1: Backward 47 Inches with 5 Sec timeout
         //encoderDrive(TURN_SPEED,   24, -24, 4.0);  // S3: Turn Right 12 Inches with 4 Sec timeout
         //encoderDrive(DRIVE_SPEED, -48, -48, 4.0);  // S4: Reverse 24 Inches with 4 Sec timeout
@@ -252,7 +254,7 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newIntakeTarget = intakeMotor.getCurrentPosition() + (int) (Inches * INTAKE_COUNTS_PER_INCH);
+            newIntakeTarget = intakeMotor.getCurrentPosition() + (int) (Inches * INTAKE_COUNTS_PER_INCH * INTAKE_TO_ARTIFACT_DISTANCE_CONVERSION);
             intakeMotor.setTargetPosition(newIntakeTarget);
 
             // Turn On RUN_TO_POSITION
