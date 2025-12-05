@@ -34,7 +34,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import java.util.Objects;
 
 /*
  * This OpMode illustrates the concept of driving a path based on encoder counts.
@@ -93,10 +96,10 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
                                                         (INTAKE_WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     INTAKE_TO_ARTIFACT_DISTANCE_CONVERSION = ARTIFACT_DIAMETER/INTAKE_WHEEL_DIAMETER_INCHES;
 
-    static final double     DRIVE_SPEED             = 0.6;
+    static final double     DRIVE_SPEED             = 0.3;
     static final double     TURN_SPEED              = 0.5;
     static final double     INTAKE_SPEED = 1.0;
-    static final double target_RPM_close = 725;
+    static final double target_RPM_close = 700;
     static final double target_RPM_far = 975;
     static final double target_range = 25;
 
@@ -155,15 +158,54 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
                 backRightDrive.getCurrentPosition());
         telemetry.update();
 
+        int inches_backward = 1;
+
         // Wait for the game to start (driver presses START)
         waitForStart();
 
+
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        intakeByEncoder(INTAKE_SPEED,1,5.0); // Intake balls 10 inches with 5 sec timeout
-        //encoderDrive(DRIVE_SPEED,  75,  75, 5.0);  // S1: Backward 47 Inches with 5 Sec timeout
-        //encoderDrive(TURN_SPEED,   24, -24, 4.0);  // S3: Turn Right 12 Inches with 4 Sec timeout
-        //encoderDrive(DRIVE_SPEED, -48, -48, 4.0);  // S4: Reverse 24 Inches with 4 Sec timeout
+        if (opModeIsActive()){
+            //encoderDrive(DRIVE_SPEED,  70,  "Backward", 5.0);  // S1: Backward 75 Inches with 5 Sec timeout
+            intakeByEncoder(INTAKE_SPEED,-2,5.0);
+            for (int i = 1; i <= 3; i++) {
+                while (opModeIsActive() && !FlywheelsAtSpeed()) {
+                    outtakeLeft.setVelocity(target_RPM_close + 10 * i);
+                    outtakeRight.setVelocity(target_RPM_close + 10 * i);
+                    telemetry.addData("Outtake Left Velocity: ", outtakeLeft.getVelocity());
+                    telemetry.update();
+                }
+                    switch (i) {
+                        case 1:
+                            intakeByEncoder(INTAKE_SPEED, 2, 10.0);
+                            telemetry.addData("Case", "1");
+                            telemetry.update();
+                            break;
+                        case 2:
+                            intakeByEncoder(INTAKE_SPEED, -inches_backward, 10.0);
+                            intakeByEncoder(INTAKE_SPEED, -inches_backward + 7, 10.0);
+                            telemetry.addData("Case", "2");
+                            telemetry.update();
+                            break;
+                        case 3:
+                            intakeByEncoder(INTAKE_SPEED, -inches_backward - 2, 10.0);
+                            intakeByEncoder(INTAKE_SPEED, -inches_backward + 11 + 2, 10.0);
+                            telemetry.addData("Case", "3");
+                            telemetry.update();
+                            break;
+                    }
+
+                telemetry.addData("i value: ", i);
+                telemetry.update();
+
+            }
+            telemetry.addData("for loop", "complete");
+            telemetry.update();
+            intakeByEncoder(INTAKE_SPEED,-5,10.0);
+            outtakeLeft.setPower(0);
+            outtakeRight.setPower(0);
+        }
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -193,25 +235,26 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
             newFrontLeftTarget = frontLeftDrive.getCurrentPosition() + (int)(leftInches * DRIVE_COUNTS_PER_INCH);
             newBackLeftTarget = backLeftDrive.getCurrentPosition() + (int)(leftInches * DRIVE_COUNTS_PER_INCH);
             newFrontRightTarget = frontRightDrive.getCurrentPosition() + (int)(rightInches * DRIVE_COUNTS_PER_INCH);
-            newBackRightTarget = frontRightDrive.getCurrentPosition() + (int)(rightInches * DRIVE_COUNTS_PER_INCH);
+            newBackRightTarget = backRightDrive.getCurrentPosition() + (int)(rightInches * DRIVE_COUNTS_PER_INCH);
             frontLeftDrive.setTargetPosition(newFrontLeftTarget);
-            backLeftDrive.setTargetPosition(newBackLeftTarget);
             frontRightDrive.setTargetPosition(newFrontRightTarget);
+            backLeftDrive.setTargetPosition(newBackLeftTarget);
             backRightDrive.setTargetPosition(newBackRightTarget);
 
-
-            // Turn On RUN_TO_POSITION
+// Turn On RUN_TO_POSITION
             frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             frontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            backLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             backRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            // reset the timeout time and start motion.
+// reset the timeout time and start motion.
             runtime.reset();
             frontLeftDrive.setPower(Math.abs(speed));
-            backLeftDrive.setPower(Math.abs(speed));
             frontRightDrive.setPower(Math.abs(speed));
+            backLeftDrive.setPower(Math.abs(speed));
             backRightDrive.setPower(Math.abs(speed));
+
+// keep looping while we are still active, and
 
 
             // keep looping while we are still active, and there is time left, and both motors are running.
@@ -221,29 +264,28 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   (frontLeftDrive.isBusy() && backLeftDrive.isBusy()
-                   && frontRightDrive.isBusy() && backRightDrive.isBusy())) {
+                    (runtime.seconds() < timeoutS) &&
+                    (leftDrive.isBusy() && rightDrive.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Running to",  " %7d :%7d", newFrontLeftTarget,
-                        newBackLeftTarget, newFrontRightTarget, newBackRightTarget);
+                telemetry.addData("Running to",  " %7d :%7d", newFrontLeftTarget, newFrontRightTarget,
+                        newBackLeftTarget, newFrontRightTarget);
                 telemetry.addData("Currently at",  " at %7d :%7d",
-                        frontLeftDrive.getCurrentPosition(), backLeftDrive.getCurrentPosition(),
-                        frontRightDrive.getCurrentPosition(), backRightDrive.getCurrentPosition());
+                        frontLeftDrive.getCurrentPosition(), frontRightDrive.getCurrentPosition(),
+                        backLeftDrive.getCurrentPosition(), backRightDrive.getCurrentPosition(),);
                 telemetry.update();
             }
 
             // Stop all motion;
             frontLeftDrive.setPower(0);
-            backLeftDrive.setPower(0);
             frontRightDrive.setPower(0);
+            backLeftDrive.setPower(0);
             backRightDrive.setPower(0);
 
-            // Turn off RUN_TO_POSITION
+// Turn off RUN_TO_POSITION
             frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             sleep(250);   // optional pause after each move.
@@ -278,6 +320,18 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
             // Turn off RUN_TO_POSITION
             intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             sleep(250);   // optional pause after each move.
+        }
+    }
+
+    public boolean FlywheelsAtSpeed(){
+        if ((outtakeRight.getVelocity() >= target_RPM_close-target_range &&
+                        outtakeRight.getVelocity() <=  target_RPM_close+target_range) &&
+                        (outtakeLeft.getVelocity() >= target_RPM_close-target_range &&
+                                outtakeLeft.getVelocity() <= target_RPM_close+target_range)){
+            return true;
+        }
+        else{
+            return false;
         }
     }
 }
