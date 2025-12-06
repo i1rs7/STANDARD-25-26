@@ -30,14 +30,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import java.util.Objects;
 
 /*
  * This OpMode illustrates the concept of driving a path based on encoder counts.
@@ -65,9 +61,9 @@ import java.util.Objects;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Encoder Auto Red", group="Robot")
+@Autonomous(name="Encoder Auto Blue", group="Robot")
 
-public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
+public class Blue_RobotAutoDriveByEncoder_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -96,12 +92,12 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
                                                         (INTAKE_WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     INTAKE_TO_ARTIFACT_DISTANCE_CONVERSION = ARTIFACT_DIAMETER/INTAKE_WHEEL_DIAMETER_INCHES;
 
-    static final double     DRIVE_SPEED             = 0.95;
+    static final double     DRIVE_SPEED             = 0.7;
     static final double     TURN_SPEED              = 0.5;
     static final double     INTAKE_SPEED = 0.95;
     static final double target_RPM_close = 720;
     static final double target_RPM_far = 975;
-    static final double target_range = 25;
+    static final double target_range = 50;
 
     @Override
     public void runOpMode() {
@@ -174,7 +170,7 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
             shootThreeBalls(target_RPM_close, 15.0);
 
             //rotate
-            encoderRotation(TURN_SPEED, 135, "counterclockwise", 5.0);
+            encoderRotation(TURN_SPEED, 135, "clockwise", 5.0);
 
             //go back
             intakeMotor.setPower(0.95);
@@ -184,12 +180,12 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
             //move forward
             encoderDrive(DRIVE_SPEED,  35,  35, 5.0);
             //rotate
-            encoderRotation(TURN_SPEED, 135, "clockwise", 5.0);
+            encoderRotation(TURN_SPEED, 135, "counterclockwise", 5.0);
             //shoot
             shootThreeBalls(target_RPM_close, 15.0);
 
             //leave
-            encoderRotation(TURN_SPEED, 50, "counterclockwise", 5.0);
+            encoderRotation(TURN_SPEED, 50, "clockwise", 5.0);
             encoderDrive(DRIVE_SPEED,  -45,  -45, 5.0);
         }
 
