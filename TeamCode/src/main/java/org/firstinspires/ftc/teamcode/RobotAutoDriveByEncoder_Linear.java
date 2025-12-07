@@ -65,7 +65,8 @@ import java.util.Objects;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Encoder Auto Red", group="Robot")
+@Disabled
+        //(name="Encoder Auto Red", group="Robot")
 
 public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
 
@@ -178,7 +179,7 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
 
             //go back
             intakeMotor.setPower(0.95);
-            encoderDrive(DRIVE_SPEED,  -60,  -60, 5.0);
+            encoderDrive(DRIVE_SPEED,  -35,  -35, 5.0);
             intakeMotor.setPower(0);
 
             //move forward
@@ -189,8 +190,8 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
             shootThreeBalls(target_RPM_close, 15.0);
 
             //leave
-            encoderRotation(TURN_SPEED, 50, "counterclockwise", 5.0);
-            encoderDrive(DRIVE_SPEED,  -45,  -45, 5.0);
+            encoderRotation(TURN_SPEED, 90, "counterclockwise", 5.0);
+            encoderDrive(DRIVE_SPEED,  -30,  -30, 5.0);
         }
 
         telemetry.addData("Path", "Complete");
@@ -283,7 +284,8 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newIntakeTarget = intakeMotor.getCurrentPosition() + (int) (Inches * INTAKE_COUNTS_PER_INCH * INTAKE_TO_ARTIFACT_DISTANCE_CONVERSION);
+            newIntakeTarget = intakeMotor.getCurrentPosition() + (int)
+                    (Inches * INTAKE_COUNTS_PER_INCH * INTAKE_TO_ARTIFACT_DISTANCE_CONVERSION);
             intakeMotor.setTargetPosition(newIntakeTarget);
 
             // Turn On RUN_TO_POSITION

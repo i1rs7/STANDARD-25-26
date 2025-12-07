@@ -30,7 +30,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -62,10 +61,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Disabled
-//(name="Encoder Auto Blue", group="Robot")
+@Autonomous(name="Set Power Encoder Auto Blue", group="Robot")
 
-public class Blue_RobotAutoDriveByEncoder_Linear extends LinearOpMode {
+public class SetPower_Blue_RobotAutoDriveByEncoder_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -97,9 +95,9 @@ public class Blue_RobotAutoDriveByEncoder_Linear extends LinearOpMode {
     static final double     DRIVE_SPEED             = 0.7;
     static final double     TURN_SPEED              = 0.5;
     static final double     INTAKE_SPEED = 0.95;
-    static final double target_RPM_close = 720;
+    static final double target_RPM_close = 0.325;
     static final double target_RPM_far = 975;
-    static final double target_range = 50;
+    static final double target_range = 0.05;
 
     @Override
     public void runOpMode() {
@@ -309,10 +307,10 @@ public class Blue_RobotAutoDriveByEncoder_Linear extends LinearOpMode {
     }
 
     public boolean FlywheelsAtSpeed(){
-        if ((outtakeRight.getVelocity() >= target_RPM_close-target_range &&
-                        outtakeRight.getVelocity() <=  target_RPM_close+target_range) &&
-                        (outtakeLeft.getVelocity() >= target_RPM_close-target_range &&
-                                outtakeLeft.getVelocity() <= target_RPM_close+target_range)){
+        if ((outtakeRight.getPower() >= target_RPM_close-target_range &&
+                        outtakeRight.getPower() <=  target_RPM_close+target_range) &&
+                        (outtakeLeft.getPower() >= target_RPM_close-target_range &&
+                                outtakeLeft.getPower() <= target_RPM_close+target_range)){
             return true;
         }
         else{
@@ -326,9 +324,9 @@ public class Blue_RobotAutoDriveByEncoder_Linear extends LinearOpMode {
             intakeByEncoder(INTAKE_SPEED, -2, 5.0);
             for (i = 1; i <= 3; i++) {
                 while (opModeIsActive() && !FlywheelsAtSpeed()) {
-                    outtakeLeft.setVelocity(target_RPM + 10 * i);
-                    outtakeRight.setVelocity(target_RPM + 10 * i);
-                    telemetry.addData("Outtake Left Velocity: ", outtakeLeft.getVelocity());
+                    outtakeLeft.setPower(target_RPM);
+                    outtakeRight.setPower(target_RPM);
+                    telemetry.addData("Outtake Left Power: ", outtakeLeft.getPower());
                     telemetry.update();
                 }
                 switch (i) {
@@ -358,7 +356,7 @@ public class Blue_RobotAutoDriveByEncoder_Linear extends LinearOpMode {
 
                 // Display it for the driver.
                 telemetry.addData("Outtake Velocities",  "at %7d: %7d",
-                        outtakeLeft.getVelocity(), outtakeRight.getVelocity());
+                        outtakeLeft.getPower(), outtakeRight.getPower());
                 telemetry.addData("Ball Number", i);
                 telemetry.update();
             }

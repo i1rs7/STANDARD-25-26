@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -63,7 +64,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Solo Drive Standard Drive", group="Linear OpMode")
+@Disabled
+        //(name="Solo Drive Standard Drive", group="Linear OpMode")
 
 public class Solo_BasicOmniOpMode_Linear extends LinearOpMode {
 
@@ -79,7 +81,7 @@ public class Solo_BasicOmniOpMode_Linear extends LinearOpMode {
     private DcMotorEx outtakeRight = null;
 
 
-    static final double target_RPM_close = 725;
+    static final double target_RPM_close = 800;
     static final double target_RPM_far = 975;
     static final double target_range = 25;
     static final double NUDGE_POWER = 0.22;
@@ -231,12 +233,12 @@ public class Solo_BasicOmniOpMode_Linear extends LinearOpMode {
             }
 
             // rumbles
-            while ((gamepad1.right_trigger == 1.0) && (outtakeRight.getVelocity() >= target_RPM_close - target_range && outtakeRight.getVelocity() <= target_RPM_close + target_range) && (outtakeLeft.getVelocity() >= target_RPM_close - target_range && outtakeLeft.getVelocity() <= target_RPM_close + target_range)) {
-                gamepad1.rumble(100);
-            }
-            while ((gamepad1.left_trigger == 1.0) && (outtakeRight.getVelocity() >= target_RPM_far - target_range && outtakeRight.getVelocity() <= target_RPM_far + target_range) && (outtakeLeft.getVelocity() >= target_RPM_far - target_range && outtakeLeft.getVelocity() <= target_RPM_far + target_range)) {
-                gamepad1.rumble(100);
-            }
+            //while ((gamepad1.right_trigger == 1.0) && (outtakeRight.getVelocity() >= target_RPM_close - target_range && outtakeRight.getVelocity() <= target_RPM_close + target_range) && (outtakeLeft.getVelocity() >= target_RPM_close - target_range && outtakeLeft.getVelocity() <= target_RPM_close + target_range)) {
+            //gamepad1.rumble(100);
+            //}
+//            while ((gamepad1.left_trigger == 1.0) && (outtakeRight.getVelocity() >= target_RPM_far - target_range && outtakeRight.getVelocity() <= target_RPM_far + target_range) && (outtakeLeft.getVelocity() >= target_RPM_far - target_range && outtakeLeft.getVelocity() <= target_RPM_far + target_range)) {
+//                gamepad1.rumble(100);
+//            }
 
 
             //if (gamepad1.y) {
